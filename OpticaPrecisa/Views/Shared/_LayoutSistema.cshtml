@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OpticaPrecisa</title>
+    <!-- Bootstrap 5 CSS y Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 260px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 48px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+            background-color: #212529;
+        }
+
+            .sidebar .nav-link {
+                font-weight: 500;
+                color: #adb5bd;
+                padding: 12px 20px;
+            }
+
+                .sidebar .nav-link:hover, .sidebar .nav-link.active {
+                    color: #fff;
+                    background-color: rgba(255,255,255,0.1);
+                }
+
+                .sidebar .nav-link i {
+                    margin-right: 10px;
+                }
+
+        main {
+            margin-left: 260px;
+            padding: 30px;
+        }
+
+        .navbar-top {
+            margin-left: 260px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra Superior -->
+    <nav class="navbar navbar-expand navbar-light navbar-top px-4 fixed-top">
+        <div class="container-fluid justify-content-end">
+            <ul class="navbar-nav align-items-center">
+                <li class="nav-item me-3">
+                    <span class="text-secondary">Usuario: <b>@User.Identity?.Name</b></span>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-danger btn-sm" asp-controller="Acceso" asp-action="Salir">
+                        <i class="bi bi-box-arrow-right"></i> Salir
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Menú Lateral (Sidebar) -->
+    <div class="sidebar d-flex flex-column flex-shrink-0 p-3 text-white">
+        <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4 fw-bold">OpticaPrecisa 👓</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item mb-1">
+                <a class="nav-link text-white" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-house-door"></i> Inicio
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link text-white" asp-controller="Ventas" asp-action="Index">
+                    <i class="bi bi-cart-check"></i> Ventas
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link text-white" asp-controller="Productos" asp-action="Index">
+                    <i class="bi bi-eyeglasses"></i> Productos
+                </a>
+            </li>
+            <li class="nav-item mb-1">
+                <a class="nav-link text-white" asp-controller="Clientes" asp-action="Index">
+                    <i class="bi bi-people"></i> Clientes
+                </a>
+            </li>
+
+            <!-- RESTRICCIÓN POR ROL: Solo los Administradores verán la opción de Vendedores y Usuarios -->
+            @if (User.IsInRole("Administrador"))
+            {
+                <li class="nav-item mt-3 mb-1">
+                    <small class="text-muted px-3 text-uppercase">Administración</small>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" asp-controller="Vendedores" asp-action="Index">
+                        <i class="bi bi-person-badge"></i> Vendedores
+                    </a>
+                </li>
+                <li class="nav-item mb-1">
+                    <a class="nav-link text-white" asp-controller="Usuarios" asp-action="Index">
+                        <i class="bi bi-shield-lock"></i> Usuarios
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+
+    <!-- Contenido Principal Dinámico -->
+    <main>
+        <div style="height: 50px;"></div> <!-- Espacio para la barra superior fija -->
+        @RenderBody()
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
