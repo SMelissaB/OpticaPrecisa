@@ -1,0 +1,25 @@
+## Visual Studio / .NET Core / MSBuild
+**/bin/
+**/obj/
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Archivos de respaldo y temporales
+*.log
+*.tmp
+_ReSharper*/
+*.rsuser
+*~
+
+## Publicaciones y carpetas de compilación
+[Bb]in/
+[Oo]bj/
+[Rr]elease/
+[Dd]ebug/
+
+## Entorno del sistema operativo
+.DS_Store
+Thumbs.db
