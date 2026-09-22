@@ -1,0 +1,49 @@
+﻿@{
+    Layout = null; // Un login suele ir sin el menú principal de la aplicación
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - OpticaPrecisa</title>
+    <!-- Bootstrap CSS CDN para dar estilo al formulario -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex align-items-center justify-content-center vh-100">
+
+    <div class="card shadow-sm p-4" style="width: 100%; max-width: 400px;">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold text-primary">OpticaPrecisa 👓</h2>
+            <p class="text-muted">Inicia sesión para continuar</p>
+        </div>
+
+        <!-- El formulario apunta al método POST de AccesoController -->
+        <form asp-controller="Acceso" asp-action="Login" method="post">
+
+            <div class="mb-3">
+                <label for="nombreUsuario" class="form-label">Usuario</label>
+                <input type="text" class="form-control" id="nombreUsuario" name="nombreUsuario" required autocomplete="off" />
+            </div>
+
+            <div class="mb-3">
+                <label for="contrasena" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="contrasena" name="contrasena" required />
+            </div>
+
+            <!-- Muestra el mensaje de error si las credenciales fallan -->
+            @if (ViewData["Mensaje"] != null)
+            {
+                <div class="alert alert-danger py-2" role="alert">
+                    @ViewData["Mensaje"]
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary w-100 py-2">Ingresar</button>
+        </form>
+    </div>
+
+</body>
+</html>
