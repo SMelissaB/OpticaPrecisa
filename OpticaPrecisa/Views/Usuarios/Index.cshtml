@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CapaDatos.Usuario>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    Layout = "~/Views/Shared/_LayoutSistema.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-secondary fw-bold"><i class="bi bi-shield-lock"></i> Lista de Usuarios</h2>
+        <a asp-action="Crear" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nuevo Usuario
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre de Usuario</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th class="text-end">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.IdUsuario</td>
+                                <td class="fw-semibold">@item.NombreUsuario</td>
+                                <td>
+                                    <span class="badge @(item.Rol == "Administrador" ? "bg-danger" : "bg-primary")">
+                                        @item.Rol
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (item.Estado == true)
+                                    {
+                                        <span class="text-success fw-bold">● Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger fw-bold">● Inactivo</span>
+                                    }
+                                </td>
+                                <td class="text-end">
+                                    <a asp-action="Editar" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-outline-warning me-1" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Eliminar" asp-route-id="@item.IdUsuario" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de dar de baja a este usuario?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Dar de baja">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
