@@ -43,10 +43,19 @@ namespace CapaNegocio
             await _context.SaveChangesAsync();
         }
 
-        // Actualizar usuario existente
         public async Task ActualizarUsuarioAsync(Usuario usuario)
         {
-            _context.Usuario.Update(usuario);
+            // 1. Buscamos el usuario actual directamente desde la base de datos
+            var usuarioDb = await _context.Usuario.FindAsync(usuario.IdUsuario);
+            if (usuarioDb == null) return;
+
+            // 2. Actualizamos únicamente los campos que permitimos editar en el formulario
+            usuarioDb.Correo = usuario.Correo;
+            usuarioDb.Rol = usuario.Rol;
+            usuarioDb.Estado = usuario.Estado;
+
+            // 3. Guardamos los cambios
+            _context.Usuario.Update(usuarioDb);
             await _context.SaveChangesAsync();
         }
 
