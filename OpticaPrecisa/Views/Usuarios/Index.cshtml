@@ -21,6 +21,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nombre de Usuario</th>
+                            <th>Correo</th>
                             <th>Rol</th>
                             <th>Estado</th>
                             <th class="text-end">Acciones</th>
@@ -32,6 +33,7 @@
                             <tr>
                                 <td>@item.IdUsuario</td>
                                 <td class="fw-semibold">@item.NombreUsuario</td>
+                                <td>@item.Correo</td>
                                 <td>
                                     <span class="badge @(item.Rol == "Administrador" ? "bg-danger" : "bg-primary")">
                                         @item.Rol

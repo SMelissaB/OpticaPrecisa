@@ -6,54 +6,63 @@
 }
 
 <div class="container-fluid px-4">
-    <div class="row justify-content-center">
-        <div class="col-12 col-md-8 col-lg-6">
-            <div class="card shadow-sm border-0 mt-4">
-                <div class="card-header bg-warning text-dark py-3">
-                    <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Editar Usuario</h5>
+    <!-- Cabecera de la sección -->
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h2 class="text-secondary fw-bold"><i class="bi bi-pencil-square"></i> Editar Usuario</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Volver a la lista
+        </a>
+    </div>
+
+    <!-- Formulario con ancho equilibrado -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <form asp-action="Editar" method="post">
+                <!-- Campo oculto indispensable para conservar el ID al actualizar -->
+                <input type="hidden" asp-for="IdUsuario" />
+
+                <div class="row">
+                    <!-- Nombre de usuario de solo lectura -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="NombreUsuario" class="form-label fw-semibold">Nombre de Usuario</label>
+                        <input asp-for="NombreUsuario" class="form-control bg-light" readonly />
+                        <div class="form-text text-muted">El nombre de usuario no se puede modificar.</div>
+                    </div>
+
+                    <!-- Correo Electrónico (Editable) -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Correo" class="form-label fw-semibold">Correo Electrónico</label>
+                        <input asp-for="Correo" type="email" class="form-control" required />
+                    </div>
+
+                    <!-- Rol del Sistema (Editable) -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Rol" class="form-label fw-semibold">Rol del Sistema</label>
+                        <select asp-for="Rol" class="form-select" required>
+                            <option value="Administrador">Administrador</option>
+                            <option value="Vendedor">Vendedor</option>
+                        </select>
+                    </div>
+
+                    <!-- Estado (Editable) -->
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Estado" class="form-label fw-semibold">Estado</label>
+                        <select asp-for="Estado" class="form-select">
+                            <option value="True">Activo</option>
+                            <option value="False">Inactivo</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="card-body p-4">
-                    <form asp-action="Editar" method="post">
-                        <!-- Campo oculto indispensable para conservar el ID al actualizar -->
-                        <input type="hidden" asp-for="IdUsuario" />
 
-                        <div class="mb-3">
-                            <label asp-for="NombreUsuario" class="form-label fw-semibold">Nombre de Usuario</label>
-                            <input asp-for="NombreUsuario" class="form-control" required autocomplete="off" />
-                        </div>
+                <hr class="my-4">
 
-                        <div class="mb-3">
-                            <label asp-for="Contrasena" class="form-label fw-semibold">Contraseña</label>
-                            <input asp-for="Contrasena" type="text" class="form-control" required />
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Rol" class="form-label fw-semibold">Rol del Sistema</label>
-                            <select asp-for="Rol" class="form-select" required>
-                                <option value="Administrador">Administrador</option>
-                                <option value="Vendedor">Vendedor</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Estado" class="form-label fw-semibold">Estado</label>
-                            <select asp-for="Estado" class="form-select">
-                                <option value="True">Activo</option>
-                                <option value="False">Inactivo</option>
-                            </select>
-                        </div>
-
-                        <div class="d-flex justify-content-between mt-4">
-                            <a asp-action="Index" class="btn btn-secondary">
-                                <i class="bi bi-arrow-left"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="bi bi-save"></i> Actualizar Cambios
-                            </button>
-                        </div>
-                    </form>
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-secondary px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-save"></i> Actualizar Cambios
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </div>

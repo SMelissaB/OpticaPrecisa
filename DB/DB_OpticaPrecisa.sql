@@ -1,3 +1,4 @@
+--use master
 --DROP DATABASE DB_OpticaPrecisa
 
 -- 1. Crear la base de datos
@@ -32,6 +33,7 @@ CREATE TABLE Usuario (
     IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
     NombreUsuario VARCHAR(50) NOT NULL,
     Contrasena VARCHAR(100) NOT NULL,
+	Correo VARCHAR(100) NOT NULL,
     Rol VARCHAR(30) CHECK (Rol IN ('Administrador', 'Vendedor')) NOT NULL,
     Estado BIT DEFAULT 1 -- 1: Activo, 0: Inactivo
 );
@@ -95,9 +97,9 @@ INSERT INTO Categoria (Nombre, Descripcion) VALUES
 ('Lunas', 'Lunas oftálmicas con tratamientos'),
 ('Accesorios', 'Estuches, líquidos limpiadores y paños');
 
-INSERT INTO Usuario (NombreUsuario, Contrasena, Rol) VALUES 
-('admin', 'admin123', 'Administrador'),
-('atorres', 'venta2026', 'Vendedor');
+INSERT INTO Usuario (NombreUsuario, Contrasena, Correo, Rol) VALUES 
+('admin', 'admin123', 'admin@sistema.com', 'Administrador'),
+('atorres', 'venta2026', 'atorres@sistema.com', 'Vendedor');
 
 INSERT INTO Vendedor (IdUsuario, Nombre, Dni, Telefono, Correo) VALUES 
 (2, 'Ana Torres', '78912345', '955443322', 'atorres@opticaprecisa.com');
