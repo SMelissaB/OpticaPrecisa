@@ -20,6 +20,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo de expiración de la sesión
     });
 builder.Services.AddScoped<UsuarioService>();
+builder.Services.AddScoped<CorreoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,11 +9,13 @@ namespace OpticaPrecisa.Controllers
     public class AccesoController : Controller
     {
         private readonly UsuarioService _usuarioService;
+        private readonly CorreoService _correoService;
 
         // Inyectamos el servicio de negocio que creamos
-        public AccesoController(UsuarioService usuarioService)
+        public AccesoController(UsuarioService usuarioService, CorreoService correoService)
         {
             _usuarioService = usuarioService;
+            _correoService = correoService;
         }
 
         [HttpGet]
@@ -60,5 +62,48 @@ namespace OpticaPrecisa.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Acceso");
         }
+
+        [HttpGet]
+        public IActionResult OlvideContrasena()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ProcesarOlvideContrasena(string correo)
+        {
+            var usuario = await _usuarioService.ObtenerPorCorreoAsync(correo);
+            if (usuario == null)
+            {
+                ViewData["Error"] = "El correo ingresado no se encuentra registrado en el sistema.";
+                return View("OlvideContrasena");
+            }
+
+            string nuevaContrasena = Guid.NewGuid().ToString().Substring(0, 8);
+            bool actualizado = await _usuarioService.ActualizarContrasenaAsync(usuario.IdUsuario, nuevaContrasena);
+
+            if (!actualizado)
+            {
+                ViewData["Error"] = "Ocurrió un error al actualizar la contraseña. Inténtalo de nuevo.";
+                return View("OlvideContrasena");
+            }
+
+            string asunto = "Recuperación de Contraseña - OpticaPrecisa";
+            string cuerpo = $"Hola {usuario.NombreUsuario},\n\nHas solicitado restablecer tu contraseña. Tu nueva contraseña temporal es: {nuevaContrasena}\n\nTe recomendamos iniciar sesión y cambiarla.";
+
+            bool correoEnviado = await _correoService.EnviarCorreoAsync(correo, asunto, cuerpo);
+
+            if (correoEnviado)
+            {
+                ViewData["Mensaje"] = "Se ha enviado una nueva contraseña temporal a tu correo electrónico.";
+            }
+            else
+            {
+                ViewData["Error"] = "La contraseña se actualizó, pero no se pudo enviar el correo electrónico.";
+            }
+
+            return View("OlvideContrasena");
+        }
+
     }
 }
