@@ -12,9 +12,7 @@ namespace CapaNegocio
             _context = context;
         }
 
-        /// <summary>
         /// Valida las credenciales del usuario para el inicio de sesión.
-        /// </summary>
         public async Task<Usuario?> ValidarUsuarioAsync(string nombreUsuario, string contrasena)
         {
             // Busca el usuario que coincida, esté activo y trae los datos de vendedor si los tuviera
@@ -24,5 +22,30 @@ namespace CapaNegocio
 
             return usuario;
         }
+
+
+        // Busca un usuario activo por su correo electrónico para la recuperación de contraseña.
+        public async Task<Usuario?> ObtenerPorCorreoAsync(string correo)
+        {
+            return await _context.Usuario
+                .FirstOrDefaultAsync(u => u.Correo == correo && u.Estado == true);
+        }
+
+        // Actualiza la contraseña del usuario en la base de datos.
+        public async Task<bool> ActualizarContrasenaAsync(int idUsuario, string nuevaContrasena)
+        {
+            var usuario = await _context.Usuario.FindAsync(idUsuario);
+            if (usuario == null)
+            {
+                return false;
+            }
+
+            usuario.Contrasena = nuevaContrasena;
+            _context.Usuario.Update(usuario);
+
+            int resultado = await _context.SaveChangesAsync();
+            return resultado > 0;
+        }
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = null; // Un login suele ir sin el menú principal de la aplicación
+    Layout = null;
     ViewData["Title"] = "Iniciar Sesión";
 }
 
@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OpticaPrecisa</title>
-    <!-- Bootstrap CSS CDN para dar estilo al formulario -->
+    <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light d-flex align-items-center justify-content-center vh-100">
@@ -41,7 +41,12 @@
                 </div>
             }
 
-            <button type="submit" class="btn btn-primary w-100 py-2">Ingresar</button>
+            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">Ingresar</button>
+
+            <!-- Enlace para recuperación de contraseña -->
+            <div class="text-center">
+                <a asp-controller="Acceso" asp-action="OlvideContrasena" class="text-decoration-none small text-secondary">¿Olvidaste tu contraseña?</a>
+            </div>
         </form>
     </div>
 
