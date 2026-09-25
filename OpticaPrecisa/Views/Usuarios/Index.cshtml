@@ -6,8 +6,8 @@
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-secondary fw-bold"><i class="bi bi-shield-lock"></i> Lista de Usuarios</h2>
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+        <h2 class="text-secondary fw-bold fs-3 mb-0"><i class="bi bi-shield-lock"></i> Lista de Usuarios</h2>
         <a asp-action="Crear" class="btn btn-primary">
             <i class="bi bi-plus-lg"></i> Nuevo Usuario
         </a>
@@ -19,21 +19,21 @@
                 <table class="table table-hover align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th>ID</th>
+                            <th class="d-none d-md-table-cell">ID</th>
                             <th>Nombre de Usuario</th>
-                            <th>Correo</th>
+                            <th class="d-none d-md-table-cell">Correo</th>
                             <th>Rol</th>
                             <th>Estado</th>
-                            <th class="text-end">Acciones</th>
+                            <th class="text-end text-nowrap">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.IdUsuario</td>
+                                <td class="d-none d-md-table-cell">@item.IdUsuario</td>
                                 <td class="fw-semibold">@item.NombreUsuario</td>
-                                <td>@item.Correo</td>
+                                <td class="d-none d-md-table-cell">@item.Correo</td>
                                 <td>
                                     <span class="badge @(item.Rol == "Administrador" ? "bg-danger" : "bg-primary")">
                                         @item.Rol
@@ -49,7 +49,7 @@
                                         <span class="text-danger fw-bold">● Inactivo</span>
                                     }
                                 </td>
-                                <td class="text-end">
+                                <td class="text-end text-nowrap">
                                     <a asp-action="Editar" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-outline-warning me-1" title="Editar">
                                         <i class="bi bi-pencil"></i>
                                     </a>
