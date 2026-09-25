@@ -6,19 +6,33 @@ namespace CapaNegocio
     public class UsuarioService
     {
         private readonly ApplicationDbContext _context;
+        private readonly CorreoService _correoService;
 
-        public UsuarioService(ApplicationDbContext context)
+        public UsuarioService(ApplicationDbContext context, CorreoService correoService)
         {
             _context = context;
+            _correoService = correoService;
         }
 
         // Valida las credenciales del usuario para el inicio de sesión.
         public async Task<Usuario?> ValidarUsuarioAsync(string nombreUsuario, string contrasena)
         {
-            // Busca el usuario que coincida, esté activo y trae los datos de vendedor si los tuviera
+            // Buscamos al usuario únicamente por su nombre y si está activo
             var usuario = await _context.Usuario
                 .Include(u => u.Vendedor)
-                .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario && u.Contrasena == contrasena && u.Estado == true);
+                .FirstOrDefaultAsync(u => u.NombreUsuario == nombreUsuario && u.Estado == true);
+
+            if (usuario == null)
+            {
+                return null;
+            }
+
+            // Verificamos si la contraseña ingresada coincide con el hash almacenado
+            bool passwordValida = BCrypt.Net.BCrypt.Verify(contrasena, usuario.Contrasena);
+            if (!passwordValida)
+            {
+                return null;
+            }
 
             return usuario;
         }
@@ -35,10 +49,14 @@ namespace CapaNegocio
             return await _context.Usuario.FindAsync(id);
         }
 
-        // Crear un nuevo usuario
+        // Crear un nuevo usuario hasheando su contraseña
         public async Task CrearUsuarioAsync(Usuario usuario)
         {
             usuario.Estado = true; // Por defecto activo
+
+            // Encriptamos la contraseña antes de guardarla en la base de datos
+            usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
+
             _context.Usuario.Add(usuario);
             await _context.SaveChangesAsync();
         }
@@ -53,6 +71,11 @@ namespace CapaNegocio
             usuarioDb.Correo = usuario.Correo;
             usuarioDb.Rol = usuario.Rol;
             usuarioDb.Estado = usuario.Estado;
+
+            if (!string.IsNullOrEmpty(usuario.Contrasena) && usuario.Contrasena != usuarioDb.Contrasena)
+            {
+                usuarioDb.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
+            }
 
             // 3. Guardamos los cambios
             _context.Usuario.Update(usuarioDb);
@@ -79,7 +102,7 @@ namespace CapaNegocio
         }
 
         // Actualiza la contraseña del usuario en la base de datos.
-        public async Task<bool> ActualizarContrasenaAsync(int idUsuario, string nuevaContrasena)
+        public async Task<bool> ActualizarContrasenaAsync(int idUsuario, string nuevaContrasenaPlana)
         {
             var usuario = await _context.Usuario.FindAsync(idUsuario);
             if (usuario == null)
@@ -87,11 +110,34 @@ namespace CapaNegocio
                 return false;
             }
 
-            usuario.Contrasena = nuevaContrasena;
+            usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(nuevaContrasenaPlana);
             _context.Usuario.Update(usuario);
 
             int resultado = await _context.SaveChangesAsync();
             return resultado > 0;
+        }
+
+        public async Task<bool> CambiarContrasenaAsync(int idUsuario, string passwordActual, string nuevaPassword)
+        {
+            var usuario = await _context.Usuario.FindAsync(idUsuario);
+            if (usuario == null) return false;
+
+            // Verificar si la contraseña actual coincide con el hash en BD
+            bool esValida = BCrypt.Net.BCrypt.Verify(passwordActual, usuario.Contrasena);
+            if (!esValida) return false;
+
+            // Hashear y guardar la nueva contraseña
+            usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(nuevaPassword);
+            _context.Usuario.Update(usuario);
+            await _context.SaveChangesAsync();
+
+            // Enviar notificación por correo desde el servicio
+            string asunto = "Seguridad: Modificación de Contraseña";
+            string mensaje = $"Hola {usuario.NombreUsuario},\n\nTe informamos que la contraseña de tu cuenta ha sido modificada exitosamente.\n\nSi no realizaste esta acción, comunícate con el administrador de inmediato.";
+
+            await _correoService.EnviarCorreoAsync(usuario.Correo, asunto, mensaje);
+
+            return true;
         }
 
     }
