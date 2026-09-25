@@ -9,10 +9,11 @@ namespace OpticaPrecisa.Controllers
     public class UsuariosController : Controller
     {
         private readonly UsuarioService _usuarioService;
-
-        public UsuariosController(UsuarioService usuarioService)
+        private readonly CorreoService _correoService;
+        public UsuariosController(UsuarioService usuarioService, CorreoService correoService)
         {
             _usuarioService = usuarioService;
+            _correoService = correoService;
         }
 
         // GET: Usuarios
@@ -68,6 +69,43 @@ namespace OpticaPrecisa.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CambiarPassword(int idUsuario, string passwordActual, string nuevaPassword, string confirmarPassword)
+        {
+            var usuario = await _usuarioService.ObtenerUsuarioPorIdAsync(idUsuario);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Validar que la contraseña actual sea correcta
+            if (usuario.Contrasena != passwordActual)
+            {
+                TempData["Error"] = "La contraseña actual ingresada es incorrecta.";
+                return RedirectToAction(nameof(Editar), new { id = idUsuario });
+            }
+
+            // Validar que las nuevas contraseñas coincidan
+            if (nuevaPassword != confirmarPassword)
+            {
+                TempData["Error"] = "Las nuevas contraseñas no coinciden.";
+                return RedirectToAction(nameof(Editar), new { id = idUsuario });
+            }
+
+            // Actualizar contraseña
+            usuario.Contrasena = nuevaPassword;
+            await _usuarioService.ActualizarUsuarioAsync(usuario);
+
+            // Enviar notificación por correo
+            string asunto = "Seguridad: Modificación de Contraseña";
+            string mensaje = $"Hola {usuario.NombreUsuario},\n\nTe informamos que la contraseña de tu cuenta ha sido modificada exitosamente.\n\nSi no realizaste esta acción, comunícate con el administrador de inmediato.";
+            await _correoService.EnviarCorreoAsync(usuario.Correo, asunto, mensaje);
+
+            TempData["Exito"] = "La contraseña se ha actualizado correctamente y se ha enviado un correo de notificación.";
+            return RedirectToAction(nameof(Editar), new { id = idUsuario });
         }
 
         // POST: Usuarios/Eliminar/5
