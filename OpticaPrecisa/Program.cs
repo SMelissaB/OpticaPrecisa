@@ -16,6 +16,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LoginPath = "/Acceso/Login"; // A dónde redirige si no está logueado
         options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Tiempo de expiración de la sesión
     });
+builder.Services.AddScoped<VendedorService>();
 builder.Services.AddScoped<UsuarioService>();
 builder.Services.AddScoped<CorreoService>();
 builder.Services.AddScoped<VentaDatos>();
