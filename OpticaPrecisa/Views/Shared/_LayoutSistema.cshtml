@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - OpticaPrecisa</title>
-    <!-- Bootstrap 5 CSS y Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <style>
@@ -85,7 +84,6 @@
 </head>
 <body>
 
-    <!-- Barra Superior -->
     <nav class="navbar navbar-expand navbar-light navbar-top px-4 fixed-top">
         <div class="container-fluid justify-content-between justify-content-lg-end">
             <button class="btn btn-outline-secondary d-lg-none" type="button" id="sidebarToggle">
@@ -132,7 +130,6 @@
                 </a>
             </li>
 
-            <!-- RESTRICCIÓN POR ROL: Solo los Administradores verán la opción de Vendedores y Usuarios -->
             @if (User.IsInRole("Administrador"))
             {
                 <li class="nav-item mt-3 mb-1">
@@ -152,13 +149,11 @@
         </ul>
     </div>
 
-    <!-- Contenido Principal Dinámico -->
     <main>
-        <div style="height: 50px;"></div> <!-- Espacio para la barra superior fija -->
+        <div style="height: 50px;"></div> 
         @RenderBody()
     </main>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sidebar = document.getElementById('appSidebar');

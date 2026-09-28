@@ -21,7 +21,6 @@ namespace OpticaPrecisa.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            // Si ya está logueado, lo mandamos directo al inicio
             if (User.Identity!.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
@@ -32,7 +31,6 @@ namespace OpticaPrecisa.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string nombreUsuario, string contrasena)
         {
-            // Validamos usando la Capa de Negocio
             var usuario = await _usuarioService.ValidarUsuarioAsync(nombreUsuario, contrasena);
 
             if (usuario == null)
@@ -41,16 +39,14 @@ namespace OpticaPrecisa.Controllers
                 return View();
             }
 
-            // Creamos los "Claims" (la identidad del usuario para la sesión)
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.NombreUsuario),
-                new Claim(ClaimTypes.Role, usuario.Rol ?? "Vendedor") // Guardamos el rol (Administrador / Vendedor)
+                new Claim(ClaimTypes.Role, usuario.Rol ?? "Vendedor") 
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            // Registramos la sesión mediante la cookie de autenticación
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
             return RedirectToAction("Index", "Home");
@@ -58,7 +54,6 @@ namespace OpticaPrecisa.Controllers
 
         public async Task<IActionResult> Salir()
         {
-            // Cerramos la sesión
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Acceso");
         }

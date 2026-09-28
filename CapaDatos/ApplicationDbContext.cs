@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+
+using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using CapaEntidad; 
 
 namespace CapaDatos;
 
@@ -31,7 +34,7 @@ public partial class ApplicationDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=DB_OpticaPrecisa;Trusted_Connection=True;TrustServerCertificate=True;");
+        => optionsBuilder.UseSqlServer("Server=DESKTOP-1P8HOM9\\SQLEXPRESS;Database=DB_OpticaPrecisa;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -73,19 +76,16 @@ public partial class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<DetalleVenta>(entity =>
         {
-            entity.HasKey(e => e.IdDetalle).HasName("PK__Detalle___E43646A58CA48F8A");
-
+            entity.HasKey(e => e.IdDetalle);
             entity.ToTable("Detalle_Venta");
 
             entity.Property(e => e.Subtotal).HasColumnType("decimal(10, 2)");
 
             entity.HasOne(d => d.IdProductoNavigation).WithMany(p => p.DetalleVenta)
-                .HasForeignKey(d => d.IdProducto)
-                .HasConstraintName("FK__Detalle_V__IdPro__3C69FB99");
+                .HasForeignKey(d => d.IdProducto);
 
             entity.HasOne(d => d.IdVentaNavigation).WithMany(p => p.DetalleVenta)
-                .HasForeignKey(d => d.IdVenta)
-                .HasConstraintName("FK__Detalle_V__IdVen__3B75D760");
+                .HasForeignKey(d => d.IdVenta);
         });
 
         modelBuilder.Entity<Producto>(entity =>

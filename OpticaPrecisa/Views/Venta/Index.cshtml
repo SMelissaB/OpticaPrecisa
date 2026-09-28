@@ -1,0 +1,256 @@
+﻿@{
+    ViewData["Title"] = "Nueva Venta";
+    var clientes = ViewBag.Clientes as IEnumerable<dynamic> ?? new List<dynamic>();
+    var vendedores = ViewBag.Vendedores as IEnumerable<dynamic> ?? new List<dynamic>();
+    var productos = ViewBag.Productos as IEnumerable<dynamic> ?? new List<dynamic>();
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Registrar Nueva Venta</h3>
+        <a asp-action="Historial" class="btn btn-outline-secondary">Ver Historial</a>
+    </div>
+
+    <!-- Sección 1: Datos de la Venta -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Datos de la Venta</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Cliente</label>
+                    <select id="cboCliente" class="form-select">
+                        <option value="">-- Seleccione un Cliente --</option>
+                        @foreach (var c in clientes)
+                        {
+                            <option value="@c.IdCliente">@c.Nombre (DNI: @c.Dni)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Vendedor</label>
+                    <select id="cboVendedor" class="form-select">
+                        <option value="">-- Seleccione un Vendedor --</option>
+                        @foreach (var v in vendedores)
+                        {
+                            <option value="@v.IdVendedor">@v.Nombre</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 2: Agregar Productos -->
+    <div class="card mb-3 shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Agregar Productos</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Producto</label>
+                    <select id="cboProducto" class="form-select" onchange="productoSeleccionado()">
+                        <option value="">-- Seleccione un Producto --</option>
+                        @foreach (var p in productos)
+                        {
+                            <option value="@p.IdProducto">@p.Nombre</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Stock Disp.</label>
+                    <input type="text" id="txtStock" class="form-control bg-light" readonly value="0" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Precio Unit. (S/)</label>
+                    <input type="text" id="txtPrecio" class="form-control bg-light" readonly value="0.00" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Cantidad</label>
+                    <input type="number" id="txtCantidad" class="form-control" min="1" value="1" />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-primary w-100" onclick="agregarFila()">
+                        + Agregar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sección 3: Tabla Detalle -->
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <table class="table table-bordered table-striped mb-0" id="tblVenta">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-center" style="width: 120px;">Cantidad</th>
+                        <th class="text-end" style="width: 150px;">Precio Unit.</th>
+                        <th class="text-end" style="width: 150px;">Subtotal</th>
+                        <th class="text-center" style="width: 100px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div class="card-footer d-flex justify-content-between align-items-center py-3">
+            <h4 class="mb-0">Total a Pagar: S/ <span id="lblTotal" class="text-success fw-bold">0.00</span></h4>
+            <button type="button" class="btn btn-success btn-lg px-4" onclick="finalizarVenta()">
+                Guardar Venta
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    // Catálogo cargado directamente en memoria JS
+    const catalogoProductos = [
+        @foreach (var p in productos)
+        {
+            <text>{ id: @p.IdProducto, nombre: "@Html.Raw(p.Nombre)", precio: @p.Precio.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture), stock: @p.Stock },</text>
+        }
+    ];
+
+    let carrito = [];
+
+    function productoSeleccionado() {
+        const idProd = parseInt(document.getElementById('cboProducto').value);
+        const prod = catalogoProductos.find(x => x.id === idProd);
+
+        if (prod) {
+            document.getElementById('txtPrecio').value = prod.precio.toFixed(2);
+            document.getElementById('txtStock').value = prod.stock;
+            document.getElementById('txtCantidad').max = prod.stock;
+            document.getElementById('txtCantidad').value = prod.stock > 0 ? 1 : 0;
+        } else {
+            document.getElementById('txtPrecio').value = '0.00';
+            document.getElementById('txtStock').value = '0';
+            document.getElementById('txtCantidad').value = '1';
+        }
+    }
+
+    function agregarFila() {
+        const idProd = parseInt(document.getElementById('cboProducto').value);
+        const prod = catalogoProductos.find(x => x.id === idProd);
+        const cant = parseInt(document.getElementById('txtCantidad').value || 0);
+
+        if (!prod) {
+            alert('Seleccione un producto.');
+            return;
+        }
+
+        if (cant <= 0) {
+            alert('Ingrese una cantidad válida mayor a 0.');
+            return;
+        }
+
+        if (cant > prod.stock) {
+            alert(`No hay stock suficiente. Stock disponible: ${prod.stock}`);
+            return;
+        }
+
+        const existe = carrito.find(x => x.idProducto === idProd);
+        if (existe) {
+            if (existe.cantidad + cant > prod.stock) {
+                alert(`La cantidad total (${existe.cantidad + cant}) supera el stock disponible (${prod.stock}).`);
+                return;
+            }
+            existe.cantidad += cant;
+            existe.subtotal = existe.cantidad * existe.precio;
+        } else {
+            carrito.push({
+                idProducto: prod.id,
+                nombreProducto: prod.nombre,
+                precio: prod.precio,
+                cantidad: cant,
+                subtotal: cant * prod.precio
+            });
+        }
+
+        // Resetear selección de producto
+        document.getElementById('cboProducto').value = '';
+        document.getElementById('txtPrecio').value = '0.00';
+        document.getElementById('txtStock').value = '0';
+        document.getElementById('txtCantidad').value = '1';
+
+        dibujarTabla();
+    }
+
+    function eliminarFila(index) {
+        carrito.splice(index, 1);
+        dibujarTabla();
+    }
+
+    function dibujarTabla() {
+        const tbody = document.querySelector('#tblVenta tbody');
+        tbody.innerHTML = '';
+        let total = 0;
+
+        carrito.forEach((it, idx) => {
+            total += it.subtotal;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${it.nombreProducto}</td>
+                    <td class="text-center">${it.cantidad}</td>
+                    <td class="text-end">S/ ${it.precio.toFixed(2)}</td>
+                    <td class="text-end">S/ ${it.subtotal.toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="eliminarFila(${idx})">Quitar</button>
+                    </td>
+                </tr>`;
+        });
+
+        document.getElementById('lblTotal').innerText = total.toFixed(2);
+    }
+
+    async function finalizarVenta() {
+        const idCli = parseInt(document.getElementById('cboCliente').value);
+        const idVen = parseInt(document.getElementById('cboVendedor').value);
+
+        if (!idCli) {
+            alert('Debe seleccionar un cliente.');
+            return;
+        }
+
+        if (!idVen) {
+            alert('Debe seleccionar un vendedor.');
+            return;
+        }
+
+        if (carrito.length === 0) {
+            alert('Debe agregar al menos un producto a la venta.');
+            return;
+        }
+
+        const payload = {
+            idCliente: idCli,
+            idVendedor: idVen,
+            detalleVenta: carrito.map(item => ({
+                idProducto: item.idProducto,
+                cantidad: item.cantidad,
+                subtotal: item.subtotal
+            }))
+        };
+
+        try {
+            const resp = await fetch('/Venta/Registrar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const data = await resp.json();
+            alert(data.message);
+            if (data.success) {
+                window.location.href = '/Venta/Historial';
+            }
+        } catch (err) {
+            alert('Error al registrar la venta: ' + err);
+        }
+    }
+</script>
+}

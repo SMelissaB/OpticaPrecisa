@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CapaDatos;
+using System;
 using System.Collections.Generic;
 
-namespace CapaDatos;
+namespace CapaEntidad;
 
 public partial class Vendedor
 {
@@ -22,6 +23,5 @@ public partial class Vendedor
     public bool? Estado { get; set; }
 
     public virtual Usuario? IdUsuarioNavigation { get; set; }
-
     public virtual ICollection<Venta> Venta { get; set; } = new List<Venta>();
 }
