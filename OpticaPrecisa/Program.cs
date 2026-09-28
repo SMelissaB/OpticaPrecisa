@@ -21,6 +21,7 @@ builder.Services.AddScoped<CorreoService>();
 builder.Services.AddScoped<VentaDatos>();
 builder.Services.AddScoped<VentaService>();
 
+builder.Services.AddScoped<ProductoService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
