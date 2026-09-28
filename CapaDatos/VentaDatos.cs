@@ -40,7 +40,6 @@ namespace CapaDatos
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // 1. Validar y descontar stock de cada producto
                 foreach (var item in venta.DetalleVenta)
                 {
                     var producto = await _context.Set<Producto>().FindAsync(item.IdProducto);
@@ -53,7 +52,6 @@ namespace CapaDatos
                     producto.Stock -= item.Cantidad;
                 }
 
-                // 2. Preparar el objeto Venta limpio
                 var nuevaVenta = new Venta
                 {
                     Fecha = DateTime.Now,
@@ -61,8 +59,6 @@ namespace CapaDatos
                     IdVendedor = venta.IdVendedor,
                     Total = venta.Total
                 };
-
-                // Asignar los detalles únicamente con sus datos numéricos
                 foreach (var item in venta.DetalleVenta)
                 {
                     nuevaVenta.DetalleVenta.Add(new DetalleVenta
@@ -73,7 +69,6 @@ namespace CapaDatos
                     });
                 }
 
-                // 3. Guardar la venta en la base de datos
                 await _context.Set<Venta>().AddAsync(nuevaVenta);
                 await _context.SaveChangesAsync();
 

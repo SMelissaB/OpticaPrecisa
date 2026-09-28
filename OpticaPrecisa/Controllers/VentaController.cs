@@ -2,7 +2,7 @@
 using CapaEntidad;
 using CapaNegocio;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // Solo una vez
+using Microsoft.EntityFrameworkCore; 
 
 namespace OpticaPrecisa.Controllers
 {

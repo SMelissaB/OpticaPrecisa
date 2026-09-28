@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using CapaEntidad; // <-- AGREGA ESTA LÍNEA
+using CapaEntidad; 
 
 namespace CapaDatos;
 
