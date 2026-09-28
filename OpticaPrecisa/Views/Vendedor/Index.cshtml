@@ -1,7 +1,72 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<CapaDatos.Vendedor>
+
 @{
+    ViewData["Title"] = "Gestión de Vendedores";
+    Layout = "~/Views/Shared/_LayoutSistema.cshtml";
 }
 
-//tambien crear su vista craer y editar -> esto lo borras
+<div class="container-fluid">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+        <h2 class="text-secondary fw-bold fs-3 mb-0"><i class="bi bi-person-badge"></i> Lista de Vendedores</h2>
+        <a asp-action="Crear" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nuevo Vendedor
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="d-none d-md-table-cell">ID</th>
+                            <th>Nombre</th>
+                            <th>DNI</th>
+                            <th>Teléfono</th>
+                            <th class="d-none d-md-table-cell">Correo</th>
+                            <th class="d-none d-md-table-cell">Fecha Ingreso</th>
+                            <th>Estado</th>
+                            <th class="text-end text-nowrap">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="d-none d-md-table-cell">@item.IdVendedor</td>
+                                <td class="fw-semibold">@item.Nombre</td>
+                                <td>@item.Dni</td>
+                                <td>@item.Telefono</td>
+                                <td class="d-none d-md-table-cell">@item.Correo</td>
+                                <td class="d-none d-md-table-cell">
+                                    @(item.FechaIngreso.HasValue? item.FechaIngreso.Value.ToString("dd/MM/yyyy") : "Sin fecha")
+                                </td>
+                                <td>
+                                    @if (item.Estado == true)
+                                    {
+                                        <span class="text-success fw-bold">● Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger fw-bold">● Inactivo</span>
+                                    }
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a asp-action="Editar" asp-route-id="@item.IdVendedor" class="btn btn-sm btn-outline-warning me-1" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Eliminar" asp-route-id="@item.IdVendedor" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de dar de baja a este vendedor?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Dar de baja">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

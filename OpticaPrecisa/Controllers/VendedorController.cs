@@ -15,7 +15,7 @@ namespace OpticaPrecisa.Controllers
         // GET: Vendedor
         public async Task<IActionResult> Index()
             {
-                var lista = await _vendedorService.ObtenerVendedoresAsync();
+                var lista = await _vendedorService.ObtenerVendedorAsync();
                 return View(lista);
             }
 

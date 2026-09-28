@@ -18,7 +18,7 @@ namespace CapaNegocio
         }
         
         // Listar todos los vendedores
-        public async Task<List<Vendedor>> ObtenerVendedoresAsync()
+        public async Task<List<Vendedor>> ObtenerVendedorAsync()
         {
             return await _context.Vendedor.ToListAsync();
         } 
