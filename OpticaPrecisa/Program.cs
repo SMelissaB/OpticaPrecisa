@@ -1,5 +1,6 @@
 using CapaDatos;
 using CapaNegocio;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

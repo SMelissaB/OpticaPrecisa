@@ -1,5 +1,6 @@
 ﻿@{
     ViewData["Title"] = "Nueva Venta";
+    Layout = "~/Views/Shared/_LayoutSistema.cshtml";
     var clientes = ViewBag.Clientes as IEnumerable<dynamic> ?? new List<dynamic>();
     var vendedores = ViewBag.Vendedores as IEnumerable<dynamic> ?? new List<dynamic>();
     var productos = ViewBag.Productos as IEnumerable<dynamic> ?? new List<dynamic>();

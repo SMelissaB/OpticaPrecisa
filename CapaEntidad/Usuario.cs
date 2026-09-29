@@ -1,5 +1,4 @@
-﻿using CapaEntidad;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CapaDatos;
