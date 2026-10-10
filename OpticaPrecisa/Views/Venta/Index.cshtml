@@ -11,7 +11,6 @@
         <a asp-action="Historial" class="btn btn-outline-secondary">Ver Historial</a>
     </div>
 
-    <!-- Sección 1: Datos de la Venta -->
     <div class="card mb-3 shadow-sm">
         <div class="card-header bg-light">
             <h5 class="mb-0">Datos de la Venta</h5>
@@ -42,7 +41,6 @@
         </div>
     </div>
 
-    <!-- Sección 2: Agregar Productos -->
     <div class="card mb-3 shadow-sm">
         <div class="card-header bg-light">
             <h5 class="mb-0">Agregar Productos</h5>
@@ -80,7 +78,6 @@
         </div>
     </div>
 
-    <!-- Sección 3: Tabla Detalle -->
     <div class="card shadow-sm">
         <div class="card-body p-0">
             <table class="table table-bordered table-striped mb-0" id="tblVenta">
@@ -107,7 +104,6 @@
 
 @section Scripts {
 <script>
-    // Catálogo cargado directamente en memoria JS
     const catalogoProductos = [
         @foreach (var p in productos)
         {
@@ -171,7 +167,6 @@
             });
         }
 
-        // Resetear selección de producto
         document.getElementById('cboProducto').value = '';
         document.getElementById('txtPrecio').value = '0.00';
         document.getElementById('txtStock').value = '0';
