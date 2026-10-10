@@ -1,7 +1,7 @@
 ﻿using CapaDatos;
 using CapaNegocio;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; 
+using Microsoft.EntityFrameworkCore;
 
 namespace OpticaPrecisa.Controllers
 {
@@ -44,6 +44,42 @@ namespace OpticaPrecisa.Controllers
                 var errorMsg = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
                 return Json(new { success = false, message = errorMsg });
             }
+        }
+
+        public async Task<IActionResult> ReporteGeneral(DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            var ventasQuery = _context.Set<Venta>()
+                .Include(v => v.IdClienteNavigation)
+                .Include(v => v.IdVendedorNavigation)
+                .AsQueryable();
+
+            if (fechaInicio.HasValue)
+            {
+                ventasQuery = ventasQuery.Where(v => v.Fecha >= fechaInicio.Value);
+            }
+
+            if (fechaFin.HasValue)
+            {
+                var finDia = fechaFin.Value.Date.AddDays(1).AddTicks(-1);
+                ventasQuery = ventasQuery.Where(v => v.Fecha <= finDia);
+            }
+
+            var ventas = await ventasQuery.OrderByDescending(v => v.Fecha).ToListAsync();
+
+            ViewBag.FechaInicio = fechaInicio?.ToString("yyyy-MM-dd");
+            ViewBag.FechaFin = fechaFin?.ToString("yyyy-MM-dd");
+
+            return View(ventas);
+        }
+
+        public async Task<IActionResult> Comprobante(int id)
+        {
+            var venta = await _ventaService.ObtenerPorIdAsync(id);
+            if (venta == null)
+            {
+                return NotFound();
+            }
+            return View(venta);
         }
     }
 }
