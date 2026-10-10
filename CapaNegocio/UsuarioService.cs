@@ -140,5 +140,20 @@ namespace CapaNegocio
             return true;
         }
 
+        /* quisiera hacer la siguiente consulta en linq pero no se como hacerlo
+        select* from usuario where Rol ='Vendedor'
+        and idUsuario != (select distinct idUsuario from vendedor where estado = 1)
+        and Estado = 1  y ciando idUsuarioSeleccionado tenga un valor, quiero que se incluya en la lista de vendedores aunque este en la tabla vendedor y tenga estado = 1
+        */
+        public async Task<List<Usuario>> ObtenerUsuariosVendedoresAsync(int? idUsuarioSeleccionado = null)
+        {
+            return await _context.Usuario
+                .Where(u => u.Rol == "Vendedor" &&
+                            (idUsuarioSeleccionado.HasValue && u.IdUsuario == idUsuarioSeleccionado.Value || 
+                             !_context.Vendedor.Any(v => v.IdUsuario == u.IdUsuario && v.Estado == true)) &&
+                            u.Estado == true)
+                .ToListAsync();
+        }
+
     }
 }

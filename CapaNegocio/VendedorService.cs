@@ -27,7 +27,16 @@ namespace CapaNegocio
         public async Task<Vendedor?> ObtenerVendedorPorIdAsync(int id)
         {
             return await _context.Vendedor.FindAsync(id);
-        } 
+        }
+
+        // Crear un nuevo vendedor
+        public async Task CrearVendedorAsync(Vendedor vendedor)
+        {
+            vendedor.Estado = true; // Por defecto activo
+
+            _context.Vendedor.Add(vendedor);
+            await _context.SaveChangesAsync();
+        }
 
 
         // Para actualizar el vendedor
