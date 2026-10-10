@@ -1,0 +1,67 @@
+﻿@model IEnumerable<CapaDatos.Producto>
+
+@{
+    ViewData["Title"] = "Gestión de Productos";
+    Layout = "~/Views/Shared/_LayoutSistema.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center mb-4 gap-2">
+        <h2 class="text-secondary fw-bold fs-3 mb-0"><i class="bi bi-eyeglasses"></i> Lista de Productos</h2>
+        <a asp-action="Crear" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Nuevo Producto
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="d-none d-md-table-cell">ID</th>
+                            <th>Nombre</th>
+                            <th class="d-none d-md-table-cell">Categoría</th>
+                            <th>Precio</th>
+                            <th>Stock</th>
+                            <th>Estado</th>
+                            <th class="text-end text-nowrap">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="d-none d-md-table-cell">@item.IdProducto</td>
+                                <td class="fw-semibold">@item.Nombre</td>
+                                <td class="d-none d-md-table-cell">@(item.IdCategoriaNavigation?.Nombre ?? "Sin categoría")</td>
+                                <td>S/ @item.Precio.ToString("0.00")</td>
+                                <td>@item.Stock</td>
+                                <td>
+                                    @if (item.Estado == true)
+                                    {
+                                        <span class="text-success fw-bold">● Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-danger fw-bold">● Inactivo</span>
+                                    }
+                                </td>
+                                <td class="text-end text-nowrap">
+                                    <a asp-action="Editar" asp-route-id="@item.IdProducto" class="btn btn-sm btn-outline-warning me-1" title="Editar">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <form asp-action="Eliminar" asp-route-id="@item.IdProducto" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de dar de baja este producto?');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Dar de baja">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

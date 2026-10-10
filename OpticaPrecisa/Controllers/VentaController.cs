@@ -1,5 +1,4 @@
 ﻿using CapaDatos;
-using CapaEntidad;
 using CapaNegocio;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore; 

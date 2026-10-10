@@ -1,5 +1,4 @@
-﻿using CapaEntidad;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CapaDatos;
@@ -11,6 +10,8 @@ public partial class Usuario
     public string NombreUsuario { get; set; } = null!;
 
     public string Contrasena { get; set; } = null!;
+
+    public string Correo { get; set; } = null!;
 
     public string Rol { get; set; } = null!;
 

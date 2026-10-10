@@ -1,5 +1,4 @@
 ﻿using CapaDatos;
-using CapaEntidad;
 
 namespace CapaNegocio
 {

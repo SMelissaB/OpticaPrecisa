@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CapaEntidad;
+namespace CapaDatos;
 
 public partial class Venta
 {
