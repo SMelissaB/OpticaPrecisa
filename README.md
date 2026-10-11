@@ -2,6 +2,14 @@
 
 Sistema de gestión para óptica desarrollado en .NET 8, estructurado bajo una arquitectura limpia en capas para garantizar la escalabilidad, el mantenimiento y la separación de responsabilidades.
 
+## 👥 Equipo de Trabajo
+
+- Baca Lozano, Jhoau Danilo
+- Bolívar Pérez, Sol Melissa
+- Cárdenas Torres, Mía Sunmy
+- Hurtado de Mendoza García, Lelis Carlos
+- Pariansullca Lizana, Erasmo
+
 ## 🏛️ Arquitectura del Proyecto
 
 La solución está dividida en 4 capas principales:
