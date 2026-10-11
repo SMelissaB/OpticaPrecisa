@@ -2,7 +2,9 @@ using CapaDatos;
 using CapaNegocio;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
-
+using QuestPDF.Infrastructure;
+QuestPDF.Settings.License = LicenseType.Community;
+QuestPDF.Settings.UseSystemFonts = true;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

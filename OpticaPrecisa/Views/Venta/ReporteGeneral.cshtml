@@ -8,17 +8,21 @@
     <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
         <div>
             <h3 class="mb-0 fw-bold">Reporte General de Ventas</h3>
-            <p class="text-muted mb-0">Óptica Precisa | Resumen de transacciones</p>
+            <p class="text-muted mb-0">Óptica Precisa | Generación de PDF desde Servidor</p>
         </div>
-        <div class="no-print">
-            <button onclick="window.print()" class="btn btn-primary">
-                <i class="bi bi-printer"></i> Imprimir / Guardar PDF
-            </button>
+        <div>
+            <!-- Botón que descarga el PDF real generado por el backend -->
+            <a asp-action="ReporteGeneralPdf" 
+               asp-route-fechaInicio="@ViewBag.FechaInicio" 
+               asp-route-fechaFin="@ViewBag.FechaFin" 
+               class="btn btn-danger">
+                <i class="bi bi-file-earmark-pdf"></i> Descargar Reporte PDF
+            </a>
         </div>
     </div>
 
     <!-- Formulario de Filtros -->
-    <div class="card shadow-sm border-0 mb-4 no-print">
+    <div class="card shadow-sm border-0 mb-4">
         <div class="card-body bg-light rounded">
             <form method="get" asp-action="ReporteGeneral" class="row g-3 align-items-end">
                 <div class="col-md-4">
@@ -31,7 +35,7 @@
                 </div>
                 <div class="col-md-4 d-flex gap-2">
                     <button type="submit" class="btn btn-dark w-100">
-                        <i class="bi bi-filter"></i> Filtrar
+                        <i class="bi bi-filter"></i> Filtrar Vista
                     </button>
                     <a asp-action="ReporteGeneral" class="btn btn-outline-secondary w-100">Limpiar</a>
                 </div>
