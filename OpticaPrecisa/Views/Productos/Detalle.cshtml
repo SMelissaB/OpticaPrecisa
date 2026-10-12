@@ -1,0 +1,57 @@
+﻿@model CapaDatos.Producto
+
+@{
+    ViewData["Title"] = "Detalle del Producto";
+    Layout = "~/Views/Shared/_LayoutSistema.cshtml";
+}
+
+<div class="container-fluid px-4">
+    <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-4 gap-2">
+        <h2 class="text-secondary fw-bold fs-3 mb-0"><i class="bi bi-eye" aria-hidden="true"></i> Detalle del Producto</h2>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left" aria-hidden="true"></i> Volver a la lista
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <dl class="row mb-0">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.IdProducto</dd>
+
+                <dt class="col-sm-3">Nombre</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3">Categoría</dt>
+                <dd class="col-sm-9">@(Model.IdCategoriaNavigation?.Nombre ?? "Sin categoría")</dd>
+
+                <dt class="col-sm-3">Descripción</dt>
+                <dd class="col-sm-9">@(string.IsNullOrWhiteSpace(Model.Descripcion) ? "—" : Model.Descripcion)</dd>
+
+                <dt class="col-sm-3">Precio</dt>
+                <dd class="col-sm-9">S/ @Model.Precio.ToString("0.00")</dd>
+
+                <dt class="col-sm-3">Stock</dt>
+                <dd class="col-sm-9">@Model.Stock</dd>
+
+                <dt class="col-sm-3">Estado</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Estado == true)
+                    {
+                        <span class="text-success fw-bold">● Activo</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger fw-bold">● Inactivo</span>
+                    }
+                </dd>
+            </dl>
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex gap-2">
+        <a asp-action="Editar" asp-route-id="@Model.IdProducto" class="btn btn-primary">
+            <i class="bi bi-pencil" aria-hidden="true"></i> Editar
+        </a>
+    </div>
+</div>
