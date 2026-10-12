@@ -50,8 +50,18 @@ namespace CapaNegocio
         }
 
         // Crear un nuevo usuario hasheando su contraseña
-        public async Task CrearUsuarioAsync(Usuario usuario)
+        // Retorna true si se creó correctamente, false si el nombre de usuario ya existe
+        public async Task<bool> CrearUsuarioAsync(Usuario usuario)
         {
+            // Verificar duplicado por NombreUsuario (case-insensitive)
+            bool existe = await _context.Usuario
+                .AnyAsync(u => u.NombreUsuario.ToLower() == usuario.NombreUsuario.ToLower());
+
+            if (existe)
+            {
+                return false;
+            }
+
             usuario.Estado = true; // Por defecto activo
 
             // Encriptamos la contraseña antes de guardarla en la base de datos
@@ -59,6 +69,8 @@ namespace CapaNegocio
 
             _context.Usuario.Add(usuario);
             await _context.SaveChangesAsync();
+
+            return true;
         }
 
         public async Task ActualizarUsuarioAsync(Usuario usuario)

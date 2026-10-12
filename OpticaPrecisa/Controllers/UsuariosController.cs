@@ -34,7 +34,14 @@ namespace OpticaPrecisa.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _usuarioService.CrearUsuarioAsync(usuario);
+                var creado = await _usuarioService.CrearUsuarioAsync(usuario);
+                if (!creado)
+                {
+                    // Añadir error de validación para el campo NombreUsuario
+                    ModelState.AddModelError(nameof(usuario.NombreUsuario), "El nombre de usuario ya existe.");
+                    return View(usuario);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);

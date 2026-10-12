@@ -18,10 +18,12 @@
     <div class="card shadow-sm border-0">
         <div class="card-body p-4">
             <form asp-action="Crear" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label asp-for="NombreUsuario" class="form-label fw-semibold">Nombre de Usuario</label>
                         <input asp-for="NombreUsuario" class="form-control" required autocomplete="off" placeholder="Ingrese el usuario" />
+                        <span asp-validation-for="NombreUsuario" class="text-danger"></span>
                     </div>
 
                     <div class="col-md-6 mb-3">
