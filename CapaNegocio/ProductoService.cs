@@ -20,18 +20,13 @@ namespace CapaNegocio
                 .ToListAsync();
         }
 
-        // Obtener un producto por su ID
-        public async Task<Producto?> ObtenerProductoPorIdAsync(int id) =>
-            await _context.Producto
+        // Obtener un producto por su ID (incluye la categoría para la vista Detalle)
+        public async Task<Producto?> ObtenerProductoPorIdAsync(int id)
+        {
+            return await _context.Producto
                 .Include(p => p.IdCategoriaNavigation)
                 .FirstOrDefaultAsync(p => p.IdProducto == id);
-
-        public Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null) =>
-            _context.Producto.AnyAsync(p => p.Nombre == nombre &&
-                                            (idExcluir == null || p.IdProducto != idExcluir));
-
-        public Task<bool> ExisteCategoriaAsync(int idCategoria) =>
-            _context.Categoria.AnyAsync(c => c.IdCategoria == idCategoria);
+        }
 
         // Listado de categorías para usar en los combos (Crear/Editar)
         public async Task<List<Categoria>> ObtenerCategoriasAsync()
@@ -39,6 +34,19 @@ namespace CapaNegocio
             return await _context.Categoria
                 .OrderBy(c => c.Nombre)
                 .ToListAsync();
+        }
+
+        // Regla de negocio: no repetir nombres de producto
+        public Task<bool> ExisteNombreAsync(string nombre, int? idExcluir = null)
+        {
+            return _context.Producto.AnyAsync(p => p.Nombre == nombre &&
+                                                   (idExcluir == null || p.IdProducto != idExcluir));
+        }
+
+        // Verifica que la categoría enviada exista realmente
+        public Task<bool> ExisteCategoriaAsync(int idCategoria)
+        {
+            return _context.Categoria.AnyAsync(c => c.IdCategoria == idCategoria);
         }
 
         // Crear un nuevo producto
